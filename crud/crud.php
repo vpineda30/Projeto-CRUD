@@ -27,11 +27,15 @@ function read() {
         $stmt = $pdo->query($sql);
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($users as $user) {
-            echo $user['id'] . " - " . $user['nome'] . " - " . $user['email'] . "<br>";
-        }  
-    }catch (PDOException $e) {
-        echo "Erro ao ler dados da tabela.";
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($users, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+
+    } catch (PDOException $e) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Erro ao ler dados da tabela.',
+            'error' => $e->getMessage()
+        ]);
     }
 }
 
